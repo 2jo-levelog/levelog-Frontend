@@ -5,20 +5,15 @@ import styled from 'styled-components';
 import { IoIosClose } from 'react-icons/io';
 
 export default function Modal(props) {
-  const { modal, close, submit, header, button } = props;
+  const { modal, width, height, close, submit, header, button } = props;
 
   return (
     <StModalContainer className={modal ? 'modal open' : 'modal'}>
-      <div className="modal_inner">
-        {header && (
-          <StHeader>
-            {header}
-            <div className="modal_close">
-              <StClose />
-            </div>
-          </StHeader>
-        )}
-
+      <StModalInner width={width} height={height} className="modal_inner">
+        {header && <StHeader> {header}</StHeader>}
+        <div className="modal_close">
+          <StClose />
+        </div>
         <StContent>
           <div className="modal_content_inner">{props.children}</div>
           {submit && (
@@ -29,7 +24,7 @@ export default function Modal(props) {
             </div>
           )}
         </StContent>
-      </div>
+      </StModalInner>
     </StModalContainer>
   );
 }
@@ -41,23 +36,11 @@ const StModalContainer = styled.div`
   left: 0;
   top: 0;
   z-index: 3;
-  /*  display: none; */
   width: 100%;
   min-height: 100vh;
+
   &.open {
     display: block;
-  }
-  .modal_inner {
-    background: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.2);
-    position: fixed;
-    left: 50%;
-    z-index: 3;
-    max-width: 500px;
-    transform: translate(-50%, -100%);
-    animation: open ease-in-out 0.3s forwards;
-    width: 95%;
   }
 
   .modal_footer {
@@ -67,38 +50,60 @@ const StModalContainer = styled.div`
   @keyframes open {
     0% {
       opacity: 0;
-      top: 45%;
+      transform: scale(0.7), translate(-50%, -50%);
+      bottom: 20%;
     }
     100% {
       opacity: 1;
-      top: 50%;
+      transform: scale(1), translate(-50%, -50%);
+      bottom: 50%;
     }
   }
   .modal_close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
   }
 `;
+
+const StModalInner = styled.div`
+  background: #fff;
+
+  width: ${props => props.width || 'auto'};
+  height: ${props => props.height || '95%'};
+  border-radius: 5px;
+  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  left: 50%;
+  z-index: 3;
+  transform: translate(-50%, 50%);
+  animation: open ease-in-out 0.6s forwards;
+`;
+
 const StHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 20px;
+
   box-sizing: border-box;
   border-bottom: 1px solid #ececec;
+  position: relative;
 `;
 const StClose = styled(IoIosClose)`
   font-size: 2rem;
+  color: #989898;
   cursor: pointer;
 `;
 const StContent = styled.div`
-  padding: 20px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 30px 0;
-
+  height: inherit;
   .modal_content_inner {
     display: flex;
-    padding: 0 1rem;
+    width: 100%;
+    height: inherit;
     box-sizing: border-box;
     justify-content: center;
     align-items: center;
@@ -111,8 +116,7 @@ const StButton = styled.button`
   min-width: 85px;
   height: 30px;
   border-radius: 3px;
-  border: 1px solid #f4f3f3;
-  box-shadow: 0 0 4px 1px rgb(0 0 0 / 10%);
+
   cursor: pointer;
   &:active {
     box-shadow: none;
