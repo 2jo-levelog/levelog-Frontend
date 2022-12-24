@@ -48,11 +48,11 @@ export default function Signup() {
 const StProfile = styled.div`
   display: flex;
   flex-direction: column;
-
   width: 100%;
   cursor: pointer;
   align-items: center;
   overflow: hidden;
+  margin-top: 40px;
   .profile_container {
   }
   .profile_image {
