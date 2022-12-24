@@ -28,6 +28,15 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'import/prefer-default-export': 'off',
     'no-param-reassign': ['error', { props: false }],
-    'react/function-component-definition': 'off',
+    'react/function-compoanent-definition': 'off',
+    'jsx-a11y/label-has-associated-control': [
+      2,
+      {
+        labelComponents: ['CustomInputLabel'],
+        labelAttributes: ['label'],
+        controlComponents: ['CustomInput'],
+        depth: 3,
+      },
+    ],
   },
 };
