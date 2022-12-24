@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useState } from 'react';
@@ -15,7 +16,9 @@ function Header() {
   const closeEventHandler = () => {
     onChangeModalHandler();
   };
-
+  const onSignHandler = () => {
+    onChangeModalHandler();
+  };
   const onSubmitHandler = () => {
     console.log('submit');
   };
@@ -42,29 +45,22 @@ function Header() {
             <span className="content_title">환영합니다!</span>
           </div>
           <div className="content_right">
-            <div className="modal_close">
+            <div
+              className="modal_close"
+              role="button"
+              tabIndex="0"
+              onClick={closeEventHandler}
+            >
               <StClose />
             </div>
-
             <StTitle>{change ? '로그인' : '회원가입'}</StTitle>
-
             <StContent>{change ? <Signin /> : <Signup />}</StContent>
-
-            {change ? (
-              <StBtnContainer>
-                아직 회원이 아니신가요?
-                <StChangeBtn onClick={() => setChange(!change)}>
-                  회원가입
-                </StChangeBtn>
-              </StBtnContainer>
-            ) : (
-              <StBtnContainer>
-                계정이 이미 있으신가요?
-                <StChangeBtn onClick={() => setChange(!change)}>
-                  로그인
-                </StChangeBtn>
-              </StBtnContainer>
-            )}
+            <StBtnContainer>
+              {change ? '아직 회원이 아니신가요?' : '계정이 이미 있으신가요?'}
+              <StChangeBtn onClick={() => setChange(!change)}>
+                {change ? '회원가입' : '로그인'}
+              </StChangeBtn>
+            </StBtnContainer>
           </div>
         </StModalContent>
       </Modal>
