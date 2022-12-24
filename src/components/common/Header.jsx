@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Modal from './Modal';
 import useModal from '../../hooks/useSignModal';
 
-const Header = () => {
+function Header() {
   const [modal, onChangeModalHandler] = useModal();
 
   // 모달창 x 버튼 눌렀을 때
@@ -43,7 +43,7 @@ const Header = () => {
       </Modal>
     </StHeader>
   );
-};
+}
 export default Header;
 
 const StHeader = styled.div`
