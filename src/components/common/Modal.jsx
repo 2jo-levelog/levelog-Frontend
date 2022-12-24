@@ -34,6 +34,7 @@ const StModalContainer = styled.div`
   top: 0;
   z-index: 3;
   width: 100%;
+  display: none;
   min-height: 100vh;
 
   &.open {
