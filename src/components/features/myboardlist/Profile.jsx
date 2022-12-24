@@ -33,9 +33,9 @@ const StUserId = styled.div`
   font-weight: bold;
 `;
 const Divider = styled.div`
-  background: red;
+  background: lightgray;
   width: 100%;
-  height: 1px;
+  height: 2px;
   margin-top: 2rem;
   margin-bottom: 1.5rem;
 `;
