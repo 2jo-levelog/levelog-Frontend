@@ -2,7 +2,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react'; // eslint-disable-line no-unused-vars
 import styled from 'styled-components';
-import { IoIosClose } from 'react-icons/io';
 
 export default function Modal(props) {
   const { modal, width, height, close, submit, header, button } = props;
@@ -11,9 +10,7 @@ export default function Modal(props) {
     <StModalContainer className={modal ? 'modal open' : 'modal'}>
       <StModalInner width={width} height={height} className="modal_inner">
         {header && <StHeader> {header}</StHeader>}
-        <div className="modal_close">
-          <StClose />
-        </div>
+
         <StContent>
           <div className="modal_content_inner">{props.children}</div>
           {submit && (
@@ -37,6 +34,7 @@ const StModalContainer = styled.div`
   top: 0;
   z-index: 3;
   width: 100%;
+  display: none;
   min-height: 100vh;
 
   &.open {
@@ -58,11 +56,6 @@ const StModalContainer = styled.div`
       transform: scale(1), translate(-50%, -50%);
       bottom: 50%;
     }
-  }
-  .modal_close {
-    position: absolute;
-    right: 10px;
-    top: 10px;
   }
 `;
 
@@ -89,11 +82,7 @@ const StHeader = styled.div`
   border-bottom: 1px solid #ececec;
   position: relative;
 `;
-const StClose = styled(IoIosClose)`
-  font-size: 2rem;
-  color: #989898;
-  cursor: pointer;
-`;
+
 const StContent = styled.div`
   box-sizing: border-box;
   display: flex;
