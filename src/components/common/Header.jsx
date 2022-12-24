@@ -16,13 +16,21 @@ const Header = () => {
   };
 
   return (
-    <StHeader>
-      <div>Logo</div>
-      <div>
-        <span>ddd</span>
-        <button type="button">ddd</button>
-      </div>
-      <Modal
+    <>
+      <StHeader>
+        <StHeaderTitleWrap>
+          <StSquare />
+          <StHeaderTitle>levelog</StHeaderTitle>
+        </StHeaderTitleWrap>
+        <StHeaderBtnsWrap>
+          <button type="button">ddd</button>
+          <button type="button">ddd</button>
+          <button type="button">ddd</button>
+        </StHeaderBtnsWrap>
+      </StHeader>
+
+      {/* Modal */}
+      {/* <Modal
         width="700px"
         height="600px"
         modal={modal}
@@ -40,15 +48,41 @@ const Header = () => {
             <div>로그인내용적어주기!</div>
           </div>
         </StModalContent>
-      </Modal>
-    </StHeader>
+      </Modal> */}
+    </>
   );
 };
 export default Header;
 
 const StHeader = styled.div`
   display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
+const StHeaderTitleWrap = styled.a`
+  display: flex;
+  /* background-color: #244; */
+  align-items: center;
+  gap: 10px;
+  height: 50px;
+`;
+const StHeaderTitle = styled.p`
+  font-size: 32px;
+  margin: 0px;
+`;
+const StSquare = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  background-color: black;
+`;
+
+const StHeaderBtnsWrap = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+`;
+
 const StModalContent = styled.div`
   display: flex;
   width: 100%;
