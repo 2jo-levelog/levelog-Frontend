@@ -38,5 +38,19 @@ module.exports = {
         depth: 3,
       },
     ],
+    'jsx-a11y/no-static-element-interactions': [
+      'error',
+      {
+        handlers: [
+          'onClick',
+          'onMouseDown',
+          'onMouseUp',
+          'onKeyPress',
+          'onKeyDown',
+          'onKeyUp',
+        ],
+        allowExpressionValues: true,
+      },
+    ],
   },
 };
