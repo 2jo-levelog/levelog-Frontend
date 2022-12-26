@@ -1,12 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 
 export default function Profile() {
+  const userInfo = useSelector(state => state.userInfo);
+
   return (
     <div>
       <StProfileContainer>
-        <StImg src="https://cdn.smehost.net/2020sonymusiccouk-ukprod/wp-content/uploads/2020/02/82879855_2644938848876080_5954685728829997056_o.jpg" />
-        <StUserId>Sam Fischer</StUserId>
+        <StImg src={userInfo.imgUrl} />
+        <StUserId>{userInfo.nickName}</StUserId>
       </StProfileContainer>
       <Divider />
     </div>
@@ -33,9 +36,9 @@ const StUserId = styled.div`
   font-weight: bold;
 `;
 const Divider = styled.div`
-  background: red;
+  background: lightgray;
   width: 100%;
-  height: 1px;
+  height: 2px;
   margin-top: 2rem;
   margin-bottom: 1.5rem;
 `;
