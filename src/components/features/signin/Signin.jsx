@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { loginCheck } from '../../../redux/modules/signupSlice';
 
 export default function Signin() {
+  const loginIdRef = useRef();
+  const loginPwRef = useRef();
   const submitHandler = async () => {
     /*  await authInstance
       .post('/api/auth/signIn', JSON.stringify({}))
@@ -15,18 +18,41 @@ export default function Signin() {
         }
       }); */
   };
+  const onCheckLoginHandler = async () => {
+    const jsonData = {
+      email: loginIdRef.current.value,
+      password: loginPwRef.current.value,
+    };
+    console.log(jsonData);
+
+    loginCheck(jsonData)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
   return (
     <form action="" className="form_field">
       <h4>이메일</h4>
       <div className="flex-column">
         <StSignInContainer className="">
-          <input type="text" placeholder="이메일을 입력하세요" />
+          <input
+            ref={loginIdRef}
+            type="text"
+            placeholder="이메일을 입력하세요"
+          />
         </StSignInContainer>
         <StSignInContainer>
-          <input type="password" placeholder="비밀번호를 입력하세요" />
+          <input
+            ref={loginPwRef}
+            type="password"
+            placeholder="비밀번호를 입력하세요"
+          />
         </StSignInContainer>
         <div className="form_btn_container">
-          <button type="button" onClick={submitHandler}>
+          <button type="button" onClick={onCheckLoginHandler}>
             로그인
           </button>
         </div>
