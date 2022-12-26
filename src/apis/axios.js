@@ -4,8 +4,8 @@ export const authInstance = axios.create({
   baseURL: 'http://13.125.224.245:8080',
   headers: {
     Accept: 'application/json',
-    'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json',
   },
 });
 

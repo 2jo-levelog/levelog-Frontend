@@ -8,6 +8,7 @@ export default function Modal(props) {
 
   return (
     <StModalContainer className={modal ? 'modal open' : 'modal'}>
+      <StCurtain />
       <StModalInner width={width} height={height} className="modal_inner">
         {header && <StHeader> {header}</StHeader>}
 
@@ -48,12 +49,12 @@ const StModalContainer = styled.div`
   @keyframes open {
     0% {
       opacity: 0;
-      transform: scale(0.7), translate(-50%, -50%);
+      transform: scale(0.6) translate(-50%, 100%);
       bottom: 20%;
     }
     100% {
       opacity: 1;
-      transform: scale(1), translate(-50%, -50%);
+      transform: scale(1) translate(-50%, 50%);
       bottom: 50%;
     }
   }
@@ -69,10 +70,15 @@ const StModalInner = styled.div`
   position: fixed;
   left: 50%;
   z-index: 3;
-  transform: translate(-50%, 50%);
-  animation: open ease-in-out 0.6s forwards;
+  transform: scale(0.1) translate(-50%, 0%);
+  transform-origin: 0 100%;
+  animation: open ease-in-out 0.3s forwards;
 `;
-
+const StCurtain = styled.div`
+  width: 100%;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.7);
+`;
 const StHeader = styled.div`
   display: flex;
   justify-content: space-between;

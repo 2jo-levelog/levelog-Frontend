@@ -1,5 +1,3 @@
-import React from 'react';
-import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserInfo } from '../../../redux/modules/userInfo';
 
