@@ -28,7 +28,7 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'import/prefer-default-export': 'off',
     'no-param-reassign': ['error', { props: false }],
-
+    'react/prop-types': 'off',
     'react/function-compoanent-definition': 'off',
     'jsx-a11y/label-has-associated-control': [
       2,
@@ -55,6 +55,5 @@ module.exports = {
     ],
 
     'react/jsx-no-useless-fragment': 'warn',
-
   },
 };
