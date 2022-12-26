@@ -91,10 +91,13 @@ const StHeader = styled.div`
   align-items: center;
   width: calc(100% - 2rem);
   margin: 0 auto 1.5rem;
-  @media (max-width: 1080px) {
-    width: 100%;
-  }
 
+  @media (max-width: 1440px) {
+    max-width: 1024px;
+  }
+  @media (max-width: 1080px) {
+    width: calc(100% - 2rem);
+  }
   align-items: center;
   justify-content: space-between;
 `;
