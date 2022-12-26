@@ -22,6 +22,9 @@ function Header() {
   const onSubmitHandler = () => {
     console.log('submit');
   };
+  const onClickLoginHandler = () => {
+    onChangeModalHandler();
+  };
 
   return (
     <>
@@ -31,14 +34,14 @@ function Header() {
           <StHeaderTitle>levelog</StHeaderTitle>
         </StHeaderTitleWrap>
         <StHeaderBtnsWrap>
-          <button type="button">ddd</button>
+          <button type="button" onClick={onClickLoginHandler}>
+            로그인
+          </button>
           <button type="button">ddd</button>
           <button type="button">ddd</button>
         </StHeaderBtnsWrap>
       </StHeader>
-
-      {/* Modal */}
-      {/* <Modal
+      <Modal
         width="700px"
         height="600px"
         modal={modal}
@@ -62,7 +65,13 @@ function Header() {
               <StClose />
             </div>
             <StTitle>{change ? '로그인' : '회원가입'}</StTitle>
-            <StContent>{change ? <Signin /> : <Signup />}</StContent>
+            <StContent>
+              {change ? (
+                <Signin closeEventHandler={closeEventHandler} />
+              ) : (
+                <Signup />
+              )}
+            </StContent>
             <StBtnContainer>
               {change ? '아직 회원이 아니신가요?' : '계정이 이미 있으신가요?'}
               <StChangeBtn onClick={() => setChange(!change)}>
@@ -71,7 +80,7 @@ function Header() {
             </StBtnContainer>
           </div>
         </StModalContent>
-      </Modal> */}
+      </Modal>
     </>
   );
 }
