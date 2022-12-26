@@ -25,6 +25,9 @@ function Header() {
   const onSubmitHandler = () => {
     console.log('submit');
   };
+  const onClickLoginHandler = () => {
+    onChangeModalHandler();
+  };
 
   return (
     <StHeader>
@@ -35,9 +38,10 @@ function Header() {
           ddd
         </button>
       </div>
+
       <Modal
-        width="600px"
-        height="550px"
+        width="700px"
+        height="600px"
         modal={modal}
         close={closeEventHandler}
       >
@@ -59,7 +63,13 @@ function Header() {
               <StClose />
             </div>
             <StTitle>{change ? '로그인' : '회원가입'}</StTitle>
-            <StContent>{change ? <Signin /> : <Signup />}</StContent>
+            <StContent>
+              {change ? (
+                <Signin closeEventHandler={closeEventHandler} />
+              ) : (
+                <Signup />
+              )}
+            </StContent>
             <StBtnContainer>
               {change ? '아직 회원이 아니신가요?' : '계정이 이미 있으신가요?'}
               <StChangeBtn onClick={() => setChange(!change)}>
@@ -84,7 +94,34 @@ const StHeader = styled.div`
   @media (max-width: 1080px) {
     width: 100%;
   }
+
+  align-items: center;
+  justify-content: space-between;
 `;
+const StHeaderTitleWrap = styled.a`
+  display: flex;
+  /* background-color: #244; */
+  align-items: center;
+  gap: 10px;
+  height: 50px;
+`;
+const StHeaderTitle = styled.p`
+  font-size: 32px;
+  margin: 0px;
+`;
+const StSquare = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  background-color: black;
+`;
+
+const StHeaderBtnsWrap = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+`;
+
 const StModalContent = styled.div`
   display: flex;
   width: 100%;
