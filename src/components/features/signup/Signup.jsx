@@ -78,6 +78,7 @@ export default function Signup() {
 
   const {
     register,
+    getValues,
     formState: { errors },
     handleSubmit,
     control,
@@ -104,11 +105,8 @@ export default function Signup() {
     } */
   };
 
-  const emailValue = useRef();
-  emailValue.current = watch('email');
-  const nickValue = useRef();
-  nickValue.current = watch('nickname');
-
+  const emailValue = getValues('email');
+  const nickValue = getValues('nickname');
   const handleJoin = data => {
     const jsonData = {
       email: data.email,
@@ -126,10 +124,10 @@ export default function Signup() {
 
   const onCheckEmailHandler = async () => {
     if (errors.email) return;
-    const jsonData = { email: emailValue.current };
+    const jsonData = { email: emailValue };
     console.log(jsonData);
 
-    emailCheck(emailValue)
+    emailCheck(jsonData)
       .then(response => {
         console.log(response);
       })
@@ -140,7 +138,7 @@ export default function Signup() {
 
   const onCheckNickHandler = async () => {
     if (errors.nickname) return;
-    const jsonData = { nickname: nickValue.current };
+    const jsonData = { nickname: nickValue };
     console.log(jsonData);
     nickCheck(jsonData)
       .then(response => {
