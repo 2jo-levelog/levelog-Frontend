@@ -18,7 +18,17 @@ export default function MainBoardList() {
       <StMainInner>
         {boardList &&
           boardList?.map(data => {
-            return <Card key={data.id} />;
+            return (
+              <Card
+                key={data.id}
+                id={data.id}
+                title={data.title}
+                content={data.content}
+                nickname={data.nickname}
+                likes={data.likeCnt}
+                createdAt={data.createdAt}
+              />
+            );
           })}
       </StMainInner>
     </StMainBord>
@@ -26,11 +36,21 @@ export default function MainBoardList() {
 }
 
 const StMainBord = styled.div`
-  max-width: 90%;
+  width: 100%;
   margin: 0 auto;
 `;
 const StMainInner = styled.div`
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 40px;
+  gap: 2rem;
+  margin: 1rem;
+
+  @media (max-width: 1080px) {
+    grid-template-columns: 1fr 1fr;
+    margin: 0 0 1rem 0;
+  }
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
