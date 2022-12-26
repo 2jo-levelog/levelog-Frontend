@@ -14,10 +14,13 @@ function Header() {
 
   // 모달창 x 버튼 눌렀을 때
   const closeEventHandler = () => {
+    setChange(true);
+    document.body.style.overflowY = 'visible';
     onChangeModalHandler();
   };
   const onSignHandler = () => {
     onChangeModalHandler();
+    document.body.style.overflowY = 'hidden';
   };
   const onSubmitHandler = () => {
     console.log('submit');
@@ -28,7 +31,9 @@ function Header() {
       <div>Logo</div>
       <div>
         <span>ddd</span>
-        <button type="button">ddd</button>
+        <button type="button" onClick={onSignHandler}>
+          ddd
+        </button>
       </div>
       <Modal
         width="600px"
@@ -71,6 +76,14 @@ export default Header;
 
 const StHeader = styled.div`
   display: flex;
+  height: 4rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+  width: calc(100% - 2rem);
+  margin: 0 auto 1.5rem;
+  @media (max-width: 1080px) {
+    width: 100%;
+  }
 `;
 const StModalContent = styled.div`
   display: flex;
