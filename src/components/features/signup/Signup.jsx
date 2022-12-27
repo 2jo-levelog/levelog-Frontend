@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
@@ -17,9 +17,12 @@ import { authInstance, instance } from '../../../apis/axios';
 export default function Signup() {
   const dispatch = useDispatch();
 
-  const [imgSrc, setImgSrc] = useState(
-    'https://thumb.photo-ac.com/d3/d3febea04f54d836026652b145854f4d_t.jpeg',
-  );
+  const [imgSrc, setImgSrc] = useState({
+    preview:
+      'https://thumb.photo-ac.com/d3/d3febea04f54d836026652b145854f4d_t.jpeg',
+    upload: '',
+  });
+
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -56,7 +59,7 @@ export default function Signup() {
       .matches(/^[a-zA-Z0-9가-힣]+$/, {
         message: <p>닉네임은 영어 대소문자,숫자,한글만 사용가능합니다.</p>,
       }),
-    /* profile_img: yup
+    /* profileImg: yup
       .mixed()
       .test('required', '프로필 이미지 파일을 선택해주세요!', value => {
         return value && value.length;
@@ -78,6 +81,7 @@ export default function Signup() {
 
   const {
     register,
+    getValues,
     formState: { errors },
     handleSubmit,
     control,
@@ -94,28 +98,47 @@ export default function Signup() {
     },
   });
 
-  const onChangeImgHandler = async e => {
-    await setImgSrc(URL.createObjectURL(e.target.files[0]));
-    const formData = new FormData();
-    const imageFile = e.target.files[0];
-    formData.append('imageFile', imageFile);
+  const onChangeImgHandler = e => {
+    setImgSrc({
+      upload: e.target.files[0],
+      preview: URL.createObjectURL(e.target.files[0]),
+    });
+
     /*   for (const key of formData.entries()) {
       console.log(`${key}`);
     } */
   };
+  /* const avatar = watch('profileImg');
+  useEffect(() => {
+    if (avatar && avatar.length > 0) {
+      const file = avatar[0];
+      // URL.createObjectURL(file);
+      console.log(file);
+    }
+  }, [imgSrc]); */
 
-  const emailValue = useRef();
-  emailValue.current = watch('email');
-  const nickValue = useRef();
-  nickValue.current = watch('nickname');
+  const emailValue = getValues('email');
+  const nickValue = getValues('nickname');
 
-  const handleJoin = data => {
-    const jsonData = {
-      email: data.email,
-      password: data.password,
-      nickname: data.nickname,
+  const handleJoin = ({ email, password, nickname, profileImg }) => {
+    const formData = new FormData();
+    const file = { email, password, nickname };
+    const blob = new Blob([JSON.stringify(file)], {
+      type: 'application/json',
+    });
+    formData.append('key', blob);
+    formData.append('multipartFile', imgSrc.upload);
+    console.log(imgSrc.upload);
+    console.log(formData);
+
+    /*  const jsonData = {
+      email,
+      password,
+      nickname,
+      profileImg: formData,
     };
-    signupCheck(jsonData)
+    console.log(jsonData); */
+    signupCheck(formData)
       .then(response => {
         console.log(response);
       })
@@ -126,10 +149,10 @@ export default function Signup() {
 
   const onCheckEmailHandler = async () => {
     if (errors.email) return;
-    const jsonData = { email: emailValue.current };
+    const jsonData = { email: emailValue };
     console.log(jsonData);
 
-    emailCheck(emailValue)
+    emailCheck(jsonData)
       .then(response => {
         console.log(response);
       })
@@ -140,7 +163,7 @@ export default function Signup() {
 
   const onCheckNickHandler = async () => {
     if (errors.nickname) return;
-    const jsonData = { nickname: nickValue.current };
+    const jsonData = { nickname: nickValue };
     console.log(jsonData);
     nickCheck(jsonData)
       .then(response => {
@@ -196,23 +219,28 @@ export default function Signup() {
       <div>
         <h4>프로필 이미지</h4>
         <StProfile>
-          <label
-            htmlFor="input_file"
-            {...register('profileimg', { required: true })}
-          >
-            <img className="profile_image" src={imgSrc} name="userImg" alt="" />
+          <label htmlFor="input_file">
+            <img
+              className="profile_image"
+              src={imgSrc.preview}
+              name="userImg"
+              alt=""
+            />
           </label>
           <input
             type="file"
             id="input_file"
+            {...register('profileImg', {
+              required: true,
+            })}
             onChange={onChangeImgHandler}
             hidden
           />
         </StProfile>
-        <StErrorMessage>{errors.profileimg?.message}</StErrorMessage>
+        <StErrorMessage>{errors.profileImg?.message}</StErrorMessage>
       </div>
       <div className="form_btn_container">
-        <button type="submit" onClick={onCheckEmailHandler}>
+        <button type="submit" onClick={handleSubmit(handleJoin)}>
           회원가입
         </button>
       </div>

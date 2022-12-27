@@ -11,7 +11,6 @@ export default function Modal(props) {
       <StCurtain />
       <StModalInner width={width} height={height} className="modal_inner">
         {header && <StHeader> {header}</StHeader>}
-
         <StContent>
           <div className="modal_content_inner">{props.children}</div>
           {submit && (

@@ -16,24 +16,47 @@ export const addUser = createAsyncThunk(
     }
   },
 );
+export const loginCheck = async loginId => {
+  try {
+    const data = await authInstance.post('/api/auth/signIn', loginId, {
+      withCredentials: true,
+    });
+    return data;
+    // 조회되고 처리된 값이 data에 담겨오고,
+  } catch (error) {
+    return error;
+  }
+};
 export const emailCheck = async email => {
   try {
     const data = await authInstance.post('/api/auth/dupEmail', email);
     return data;
     // 조회되고 처리된 값이 data에 담겨오고,
   } catch (error) {
-    return console.log(error);
-    // alert("이미 사용중인 ID 입니다.");
+    return error;
   }
 };
-export const signupCheck = async ({ email, password, nickname }) => {
+export const signupCheck = async (
+  /*  email,
+  password,
+  nickname, */
+
+  formData,
+) => {
   try {
-    console.log({ email, password, nickname });
-    const data = await authInstance.post('/api/auth/signUp', {
-      email,
-      password,
-      nickname,
-    });
+    /*  console.log(formData); */
+    const data = await instance.post(
+      '/api/auth/signUp',
+
+      formData,
+
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+
     console.log(data);
     return data;
     // 조회되고 처리된 값이 data에 담겨오고,
