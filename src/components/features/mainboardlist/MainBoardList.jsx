@@ -42,9 +42,12 @@ const StMainBord = styled.div`
 const StMainInner = styled.div`
   box-sizing: border-box;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   gap: 2rem;
 
+  @media (max-width: 1440px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
   @media (max-width: 1080px) {
     grid-template-columns: 1fr 1fr;
     margin: 0 0 1rem 0;
