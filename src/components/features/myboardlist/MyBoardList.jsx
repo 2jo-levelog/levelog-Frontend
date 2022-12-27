@@ -2,13 +2,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import MyCard from './MyCard';
-import { getPost } from '../../../apis/board';
+import { getPosts } from '../../../apis/board';
 
 export default function MyBoardList() {
   const [posts, setposts] = useState([]);
 
   const getMyBoardList = useCallback(async () => {
-    const { data } = await getPost(1);
+    const { data } = await getPosts(1);
     setposts(data);
   }, []);
   console.log(posts);
