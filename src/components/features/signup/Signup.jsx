@@ -1,5 +1,7 @@
+/* eslint-disable consistent-return */
 import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
@@ -14,15 +16,16 @@ import {
 import { authInstance, instance } from '../../../apis/axios';
 /* eslint-disable react/jsx-props-no-spreading */
 
-export default function Signup() {
+export default function Signup({ setChange }) {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const [imgSrc, setImgSrc] = useState({
     preview:
       'https://thumb.photo-ac.com/d3/d3febea04f54d836026652b145854f4d_t.jpeg',
     upload: '',
   });
-
+  const [checkEmail, setCheckEmail] = useState(false);
+  const [checkNick, setCheckNick] = useState(false);
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -82,10 +85,8 @@ export default function Signup() {
   const {
     register,
     getValues,
-    formState: { errors },
+    formState: { isSubmitting, errors },
     handleSubmit,
-    control,
-    watch,
   } = useForm({
     resolver: yupResolver(schema),
     mode: 'onBlur',
@@ -103,24 +104,15 @@ export default function Signup() {
       upload: e.target.files[0],
       preview: URL.createObjectURL(e.target.files[0]),
     });
-
-    /*   for (const key of formData.entries()) {
-      console.log(`${key}`);
-    } */
   };
-  /* const avatar = watch('profileImg');
-  useEffect(() => {
-    if (avatar && avatar.length > 0) {
-      const file = avatar[0];
-      // URL.createObjectURL(file);
-      console.log(file);
-    }
-  }, [imgSrc]); */
 
   const emailValue = getValues('email');
   const nickValue = getValues('nickname');
 
-  const handleJoin = ({ email, password, nickname, profileImg }) => {
+  const handleJoin = ({ email, password, nickname }) => {
+    if (checkNick == false || checkEmail == false) {
+      return alert('중복확인을 해주세요.');
+    }
     const formData = new FormData();
     const file = { email, password, nickname };
     const blob = new Blob([JSON.stringify(file)], {
@@ -128,19 +120,14 @@ export default function Signup() {
     });
     formData.append('key', blob);
     formData.append('multipartFile', imgSrc.upload);
-    console.log(imgSrc.upload);
-    console.log(formData);
 
-    /*  const jsonData = {
-      email,
-      password,
-      nickname,
-      profileImg: formData,
-    };
-    console.log(jsonData); */
     signupCheck(formData)
       .then(response => {
         console.log(response);
+        if (response.status == 200) {
+          alert('회원가입이 완료되었습니다.');
+          setChange(true);
+        }
       })
       .catch(error => {
         console.log(error);
@@ -149,12 +136,20 @@ export default function Signup() {
 
   const onCheckEmailHandler = async () => {
     if (errors.email) return;
+    setCheckEmail(true);
     const jsonData = { email: emailValue };
     console.log(jsonData);
 
     emailCheck(jsonData)
       .then(response => {
         console.log(response);
+        if (response.status == 200) {
+          alert('사용가능한 이메일입니다.');
+          return setCheckNick(true);
+        }
+        if (response.status == 400) {
+          return alert('중복되는 이메일입니다.');
+        }
       })
       .catch(error => {
         console.log(error);
@@ -163,11 +158,19 @@ export default function Signup() {
 
   const onCheckNickHandler = async () => {
     if (errors.nickname) return;
+
     const jsonData = { nickname: nickValue };
     console.log(jsonData);
     nickCheck(jsonData)
       .then(response => {
         console.log(response);
+        if (response.status == 200) {
+          alert('사용가능한 닉네임입니다.');
+          return setCheckNick(true);
+        }
+        if (response.status == 400) {
+          return alert('중복되는 닉네임입니다.');
+        }
       })
       .catch(error => {
         console.log(error);
@@ -240,7 +243,11 @@ export default function Signup() {
         <StErrorMessage>{errors.profileImg?.message}</StErrorMessage>
       </div>
       <div className="form_btn_container">
-        <button type="submit" onClick={handleSubmit(handleJoin)}>
+        <button
+          type="submit"
+          onClick={handleSubmit(handleJoin)}
+          disabled={isSubmitting}
+        >
           회원가입
         </button>
       </div>
