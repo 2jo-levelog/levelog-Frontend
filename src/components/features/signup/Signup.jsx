@@ -122,18 +122,23 @@ export default function Signup() {
 
   const handleJoin = ({ email, password, nickname, profileImg }) => {
     const formData = new FormData();
-    formData.append('profileImg', imgSrc.upload);
+    const file = { email, password, nickname };
+    const blob = new Blob([JSON.stringify(file)], {
+      type: 'application/json',
+    });
+    formData.append('key', blob);
+    formData.append('multipartFile', imgSrc.upload);
     console.log(imgSrc.upload);
     console.log(formData);
 
-    const jsonData = {
+    /*  const jsonData = {
       email,
       password,
       nickname,
       profileImg: formData,
     };
-    console.log(jsonData);
-    signupCheck(jsonData)
+    console.log(jsonData); */
+    signupCheck(formData)
       .then(response => {
         console.log(response);
       })
