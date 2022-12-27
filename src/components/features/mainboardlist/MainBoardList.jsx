@@ -44,7 +44,7 @@ const StMainInner = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   gap: 2rem;
-
+  margin: 0 0 1rem 0;
   @media (max-width: 1440px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
