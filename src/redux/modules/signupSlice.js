@@ -36,26 +36,23 @@ export const emailCheck = async email => {
     return error;
   }
 };
-export const signupCheck = async ({
-  email,
+export const signupCheck = async (
+  /*  email,
   password,
-  nickname,
-  profileImg,
-}) => {
+  nickname, */
+
+  formData,
+) => {
   try {
-    /*  console.log(email, password, nickname, profileImg); */
+    /*  console.log(formData); */
     const data = await instance.post(
       '/api/auth/signUp',
-      {
-        email,
-        password,
-        nickname,
-        profileImg,
-      },
+
+      formData,
+
       {
         headers: {
-          'Content-Type':
-            'multipart/form-data; boundary=<calculated when request is sent>',
+          'Content-Type': 'multipart/form-data',
         },
       },
     );
