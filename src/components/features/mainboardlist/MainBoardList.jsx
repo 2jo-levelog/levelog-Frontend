@@ -9,10 +9,10 @@ export default function MainBoardList() {
 
   useEffect(() => {
     instance.get('/api/main').then(response => {
-      setBoardList(response.data);
+      setBoardList(response.data.content);
     });
   }, []);
-
+  console.log(boardList);
   return (
     <StMainBord>
       <StMainInner>
