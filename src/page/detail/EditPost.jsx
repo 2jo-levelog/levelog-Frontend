@@ -7,15 +7,14 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import ToastEditor from './ToastEditor';
 
 // npm i -S @toast-ui/editor
-// eslint-disable-next-line react/prop-types
-export default function EditView({ type = 'edit' }) {
+
+export default function EditPost({ type = 'edit' }) {
   const [content, setcontent] = useState();
 
   const editorRef = useRef();
 
   const getHtmlContent = useCallback(() => {
     const tmpContent = localStorage.getItem('content');
-    console.log('gets');
     setcontent(tmpContent);
   }, []);
 
@@ -35,6 +34,7 @@ export default function EditView({ type = 'edit' }) {
     console.log(editorRef);
   };
 
+  // 강제 주입
   const handleEdit = () => {
     editorRef.current.getInstance().setHTML(content);
   };

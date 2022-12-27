@@ -2,7 +2,7 @@ import { Editor } from '@toast-ui/react-editor';
 
 export default function ToastEditor(props) {
   const { content, editorRef } = props;
-
+  console.log('here');
   return (
     <Editor
       // placeholder="내용을 입력해주세요."
