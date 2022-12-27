@@ -12,7 +12,7 @@ export default function MainBoardList() {
       setBoardList(response.data.content);
     });
   }, []);
-  console.log(boardList);
+
   return (
     <StMainBord>
       <StMainInner>
