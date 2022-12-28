@@ -1,17 +1,20 @@
 // import { set } from 'immer/dist/internal';
 import React, { useState, useEffect, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import MyCard from './MyCard';
 import { getPosts } from '../../../apis/board';
 
 export default function MyBoardList() {
-  const [posts, setposts] = useState([]);
+  const [posts, setposts] = useState();
+  const userInfo = useSelector(state => state.userInfo);
+  console.log('userInfo');
+  console.log(userInfo);
 
   const getMyBoardList = useCallback(async () => {
-    const { data } = await getPosts(1);
-    setposts(data);
-  }, []);
-  console.log(posts);
+    const { data } = await getPosts(userInfo.nickName);
+    setposts(data.content);
+  }, [userInfo.nickName]);
 
   useEffect(() => {
     getMyBoardList();
@@ -20,15 +23,18 @@ export default function MyBoardList() {
   return (
     <div>
       <StCardWrapper>
-        {posts.map(v => (
-          <MyCard
-            key={v.id}
-            id={v.id}
-            content={v.content}
-            cmtCnt={v.cmtCnt}
-            likeCnt={v.likeCnt}
-          />
-        ))}
+        {posts &&
+          posts.map(v => (
+            <MyCard
+              key={v.id}
+              id={v.id}
+              title={v.title}
+              content={v.content}
+              cmtCnt={v.cmtCnt}
+              likeCnt={v.likeCnt}
+              createdAt={v.createdAt}
+            />
+          ))}
       </StCardWrapper>
     </div>
   );

@@ -8,7 +8,7 @@ export default function Profile() {
   return (
     <div>
       <StProfileContainer>
-        <StImg src={userInfo.imgUrl} />
+        <StImg src={userInfo.profileImg} />
         <StUserId>{userInfo.nickName}</StUserId>
       </StProfileContainer>
       <Divider />
