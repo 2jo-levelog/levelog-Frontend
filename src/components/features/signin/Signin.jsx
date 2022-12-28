@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { setUserInfo } from '../../../redux/modules/userInfo';
 
+import { setUserInfo } from '../../../redux/modules/userInfo';
 import { postLogin } from '../../../apis/auth';
 import { getUserInfo } from '../../../apis/user';
 
@@ -13,6 +13,7 @@ export default function Signin({ closeEventHandler }) {
 
   const getUser = useCallback(async () => {
     const { data } = await getUserInfo();
+    console.log(data);
     dispatch(setUserInfo(data));
   }, [dispatch]);
 
@@ -22,6 +23,7 @@ export default function Signin({ closeEventHandler }) {
         email,
         password,
       });
+
       localStorage.setItem('id', res.headers.authorization);
       // userInfo redux 저장
       await getUser();
