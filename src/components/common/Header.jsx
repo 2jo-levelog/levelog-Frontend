@@ -81,7 +81,7 @@ function Header() {
               {change ? (
                 <Signin closeEventHandler={closeEventHandler} />
               ) : (
-                <Signup />
+                <Signup closeEventHandler={closeEventHandler} />
               )}
             </StContent>
             <StBtnContainer>
