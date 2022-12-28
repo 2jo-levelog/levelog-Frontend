@@ -1,53 +1,265 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
-
+import { useParams, Link } from 'react-router-dom';
+import styled from 'styled-components';
 // Toast-UI Viewer 임포트
 import '@toast-ui/editor/dist/toastui-editor-viewer.css';
 import { Viewer } from '@toast-ui/react-editor';
-import { getPost } from '../../apis/board';
-
-// const MOCK_DATA = {
-//   cmtCnt: 0,
-//   commentList: [],
-//   content:
-//     '<h2>easdfasdfa</h2><h3>sdfasfasdf</h3><ul><li><p>dasdfasdf</p></li><li><p>asdfsadfsadf</p></li><li><p>adsfasdfasdfs</p></li></ul>',
-//   createdAt: '2022-12-27T14:01:01.260155',
-//   id: 19,
-//   imageList: [],
-//   likeCnt: 0,
-//   modifiedAt: '2022-12-27T14:01:01.260155',
-//   nickname: '테스트용100',
-//   title: '제목입니다',
-// };
+import axios from 'axios';
+import { format, formatDistanceToNow } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { RiHeartAddFill } from 'react-icons/ri';
+import { instance } from '../../apis/axios';
 
 export default function DetailPost() {
   const { postId } = useParams();
-  const [postData, setPostData] = useState();
 
-  const getHtmlContent = useCallback(async () => {
-    const { data } = await getPost(postId);
-    setPostData(data);
-  }, [postId]);
+  const [postData, setPostData] = useState('');
 
   useEffect(() => {
-    getHtmlContent();
-  }, [getHtmlContent]);
+    instance.get(`/api/posts/${postId}`).then(response => {
+      setPostData(response);
+    });
+  }, []);
 
+  const d = new Date(postData.data?.createdAt);
+  const now = Date.now();
+  const diff = (now - d.getTime()) / 1000;
+  console.log(diff);
+
+  function formatDate() {
+    if (diff < 60 * 1) {
+      // 1분 미만일땐 방금 전 표기
+      return '방금 전';
+    }
+    if (diff < 60 * 60 * 24 * 3) {
+      // 3일 미만일땐 시간차이 출력(몇시간 전, 몇일 전)
+      return formatDistanceToNow(d, { addSuffix: true, locale: ko });
+    }
+    return format(d, 'PPP EEE p', { locale: ko }); // 날짜 포맷
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  /*
+  해야할 일 
+  1. 좋아요 버튼 기능 - 틀 완료, 기능 x
+  2. 유저 아이디 비교해서 수정, 삭제 버튼 띄우기 기능
+  3. 댓글 기능
+ */
   return (
-    <div>
+    <StDetailWrapper>
       {/* postData의 초기값은 null null상태에서 Viewer를 불러오면 에러 발생해서 postData가 겟되어진 뒤에 ToastUI를 불러옴 */}
       {postData && (
-        <>
+        <div>
           {/* TODO: 디자인 */}
-          <h1>{postData.title}</h1>
-          <p>nickname : {postData.nickname}</p>
-          <p>createdAt : {postData.createdAt}</p>
-          <p>likeCnt : {postData.likeCnt}</p>
-          <Viewer initialValue={postData.content} />
+          <div className="main_header">
+            <h1>{postData.data.title}</h1>
+            <StUtilContainer>
+              <button type="button">수정</button>
+              <button type="button">삭제</button>
+            </StUtilContainer>
+            <StBoardInfo>
+              <div className="main_userinfo">
+                <p className="board_nickname">{postData.data.nickname}</p>·
+                {postData.data?.createdAt && (
+                  <p>{formatDate(postData.data?.createdAt)}</p>
+                )}
+              </div>
+              <StLikeLabelTab>
+                <StLikeBtnTab />
+                <span>0</span>
+              </StLikeLabelTab>
+            </StBoardInfo>
+            <StLikesWrapper>
+              <StLikesContainer>
+                <div className="likes_container_inner">
+                  <StLikeLabelBrowser>
+                    <StLikeBtnBrowser />
+                  </StLikeLabelBrowser>
+                  <p className="likeCount">{postData.data?.likeCnt}</p>
+                </div>
+              </StLikesContainer>
+            </StLikesWrapper>
+          </div>
+
+          <Viewer initialValue={postData.data.content} />
+
           {/* TODO: 수정 삭제 기능 추가 */}
-        </>
+        </div>
       )}
-      {/* TODO: 댓글관련 작업 */}
-    </div>
+      {/* <StBoardUserInfo>
+            <div>
+              <StUserImg to={`/api/users/${userId}/posts/`}>
+                <img
+                  src="https://velog.velcdn.com/images/strause1/profile/47ebd413-44e3-427e-b4d3-788f30b7631c/social_profile.png"
+                  alt=""
+                />
+              </StUserImg>
+              <span>순딩</span>
+            </div>
+          </StBoardUserInfo> */}
+      <div />
+    </StDetailWrapper>
   );
 }
+
+const StDetailWrapper = styled.div`
+  width: 768px;
+  margin: 0 auto;
+  margin-top: 5.5rem;
+  padding: 0 10px;
+  box-sizing: border-box;
+  @media (max-width: 1024px) {
+    margin-top: 2rem;
+    padding: 0 1rem;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+  .main_header {
+    h1 {
+      font-size: 3rem;
+      margin-top: 0;
+      margin-bottom: 2rem;
+    }
+  }
+`;
+const StBoardInfo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+
+  .main_header {
+    padding: 0 10px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .main_userinfo {
+    display: flex;
+    display: flex;
+    align-items: center;
+    gap: 0 10px;
+    line-height: 1;
+    p {
+      margin: 0;
+    }
+  }
+  .board_nickname {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+`;
+const StLikesWrapper = styled.div`
+  position: relative;
+  left: -7rem;
+  @media (max-width: 1024px) {
+    display: none;
+  }
+`;
+const StLikesContainer = styled.div`
+  position: fixed;
+
+  top: 18rem;
+  background: #f8f9fa;
+  border: 1px solid #f1f3f5;
+  border-radius: 2rem;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  -webkit-box-align: center;
+  align-items: center;
+  .likes_container_inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .likeCount {
+    margin: 0;
+  }
+`;
+const StLikeLabelBrowser = styled.div`
+  height: 3rem;
+  width: 3rem;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 1.5rem;
+  color: #868e96;
+  cursor: pointer;
+  z-index: 5;
+  &.active {
+    color: #ffffff;
+    border-radius: 1.5rem;
+    background: #20c997;
+    border-color: #20c997;
+  }
+`;
+const StLikeLabelTab = styled.button`
+  background: #ffffff;
+  border: 1px solid #adb5bd;
+  padding: 1px 10px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 1.5rem;
+  border-radius: 0.75rem;
+  outline: none;
+  gap: 0 10px;
+  display: none;
+  @media (max-width: 1024px) {
+    display: flex;
+  }
+
+  &.active {
+    border-color: #20c997;
+    background: #20c997;
+    span {
+      color: white;
+    }
+    StLikeBtnTab {
+      color: #fff;
+    }
+  }
+`;
+const StLikeBtnBrowser = styled(RiHeartAddFill)`
+  font-size: 2rem;
+`;
+const StLikeBtnTab = styled(RiHeartAddFill)`
+  font-size: 1rem;
+  color: #495057;
+`;
+const StUtilContainer = styled.div`
+  display: flex;
+  gap: 0 10px;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+  button {
+    cursor: pointer;
+    color: #868e96;
+    border: none;
+    background: none;
+    font-size: 1rem;
+
+    &:hover {
+      color: black;
+    }
+  }
+`;
+const StBoardUserInfo = styled.div`
+  margin-top: 8rem;
+  margin-bottom: 3rem;
+`;
+const StUserImg = styled(Link)`
+  border-radius: 50%;
+  overflow: hidden;
+`;
