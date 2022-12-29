@@ -6,7 +6,7 @@ import { BsArrowLeft } from 'react-icons/bs';
 import ToastEditor from './ToastEditor';
 // Toast 에디터
 import '@toast-ui/editor/dist/toastui-editor.css';
-import { getPost, createPostApi } from '../../apis/board';
+import { getPost, createPostApi, editPostApi } from '../../apis/board';
 
 export default function EditPost() {
   const [title, setTitle] = useState('');
@@ -45,8 +45,8 @@ export default function EditPost() {
       title,
       content,
     };
-    const { data } = await createPostApi(postData);
-    navigate(`/detailpost/${data.id}`);
+    const { data } = await editPostApi(postData, postId);
+    navigate(`/detailpost/${postId}`);
   };
   const onChangeTitleHandler = e => {
     setTitle(e.target.value);
