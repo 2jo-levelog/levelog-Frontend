@@ -7,14 +7,12 @@ import { getPosts } from '../../../apis/board';
 
 export default function MyBoardList() {
   const [posts, setposts] = useState();
-  const userInfo = useSelector(state => state.userInfo);
-  console.log('userInfo');
-  console.log(userInfo);
 
   const getMyBoardList = useCallback(async () => {
-    const { data } = await getPosts(userInfo.nickName);
+    const nickName = localStorage.getItem('nickName');
+    const { data } = await getPosts(nickName);
     setposts(data.content);
-  }, [userInfo.nickName]);
+  }, []);
 
   useEffect(() => {
     getMyBoardList();

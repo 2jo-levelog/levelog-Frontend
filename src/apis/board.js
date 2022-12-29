@@ -12,19 +12,19 @@ export const getPosts = async userId => {
 
 export const getPost = async postId => {
   try {
-    const data = await instance.get(`/api/posts/${postId}`);
+    const data = await authInstance.post(`/api/posts/${postId}`);
     return data;
   } catch (error) {
     return error;
   }
 };
 
-export const createPost = async formData => {
+export const createPostApi = async postData => {
   try {
-    const data = await authInstance.post('/api/posts/write', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    const data = await authInstance.post('/api/posts/write', postData, {
+      // headers: {
+      //   'Content-Type': 'multipart/form-data',
+      // },
     });
     return data;
   } catch (error) {

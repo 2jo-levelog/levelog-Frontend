@@ -1,8 +1,9 @@
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react';
 import { Button } from '@mui/material';
 import { BsArrowLeft } from 'react-icons/bs';
-import { createPost } from '../../apis/board';
+import { createPostApi } from '../../apis/board';
 
 // Toast 에디터
 import '@toast-ui/editor/dist/toastui-editor.css';
@@ -12,24 +13,23 @@ import ToastEditor from './ToastEditor';
 export default function CreatePost({ type = 'edit' }) {
   const [title, setTitle] = useState('');
   const editorRef = useRef();
+  const navigate = useNavigate();
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     // 에디터 입력창에 입력한 내용을 HTML 태그 형태로 취득
-    const content = editorRef.current?.getInstance().getHTML();
-    // const content = editorRef.current?.getInstance().getMarkdown();
-
-    // 입력창에 입력한 내용을 MarkDown 형태로 취득 하는 방법도 있음
-    // console.log(editorRef.current?.getInstance().getMarkdown());
-    // form 데이터 형식
-    const formData = new FormData();
-    const reqData = { title, content };
-    const blob = new Blob([JSON.stringify(reqData)], {
-      type: 'application/json',
-    });
-    formData.append('key', blob);
-    // 이미지는 빈값을 넣어준다 null
-    formData.append('multipartFile', null);
-    createPost(formData);
+    // const content = editorRef.current?.getInstance().getHTML();
+    // 마크다운 형식
+    const content = editorRef.current?.getInstance().getMarkdown();
+    const postData = {
+      title,
+      content,
+    };
+    const res = await createPostApi(postData);
+    console.log(res);
+    navigate('/');
+  };
+  const onExitHandler = () => {
+    navigate(-1);
   };
 
   const onChangeTitleHandler = e => {
@@ -45,7 +45,7 @@ export default function CreatePost({ type = 'edit' }) {
       />
       <ToastEditor editorRef={editorRef} />
       <STButtonsWrap>
-        <STBackButton onClick={onSubmit}>
+        <STBackButton onClick={onExitHandler}>
           <StArrowWrap>
             <StArrow />
             <StArrowText>나가기</StArrowText>

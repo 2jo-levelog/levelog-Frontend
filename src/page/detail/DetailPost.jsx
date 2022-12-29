@@ -5,11 +5,9 @@ import styled from 'styled-components';
 // Toast-UI Viewer 임포트
 import '@toast-ui/editor/dist/toastui-editor-viewer.css';
 import { Viewer } from '@toast-ui/react-editor';
-import axios from 'axios';
 import { format, formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { RiHeartAddFill } from 'react-icons/ri';
-
 import { authInstance, instance } from '../../apis/axios';
 import MainReple from '../../components/features/reple/MainReple';
 import { setCommentInfo } from '../../redux/modules/commentSlice';
@@ -24,11 +22,11 @@ export default function DetailPost() {
       setPostData(response);
     });
     setCommentInfo();
-  }, [dispatch]);
+  }, [dispatch, postId]);
   const d = new Date(postData.data?.createdAt);
   const now = Date.now();
   const diff = (now - d.getTime()) / 1000;
-  console.log(postData);
+
   const commentValue = useRef();
   function formatDate() {
     if (diff < 60 * 1) {
