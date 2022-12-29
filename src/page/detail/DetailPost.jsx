@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 // Toast-UI Viewer 임포트
@@ -13,6 +13,7 @@ import MainReple from '../../components/features/reple/MainReple';
 
 export default function DetailPost() {
   const { postId } = useParams();
+  const navigate = useNavigate();
   const [isTrue, setIsTrue] = useState(true);
   const [postData, setPostData] = useState('');
   const globalNick = useSelector(state => state.userInfo.nickName);
@@ -59,6 +60,8 @@ export default function DetailPost() {
       .delete(`/api/posts/${postId}`)
       .then(res => {
         console.log(res);
+        alert('글이 삭제 되었습니다.');
+        navigate('/');
       })
       .catch(error => console.log(error));
   };
