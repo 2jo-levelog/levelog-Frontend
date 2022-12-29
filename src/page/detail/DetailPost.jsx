@@ -10,6 +10,7 @@ import { ko } from 'date-fns/locale';
 import { RiHeartAddFill } from 'react-icons/ri';
 import { authInstance, instance } from '../../apis/axios';
 import MainReple from '../../components/features/reple/MainReple';
+// import { setCommentInfo } from '../../redux/modules/commentSlice';
 
 export default function DetailPost() {
   const { postId } = useParams();

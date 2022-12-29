@@ -2,7 +2,6 @@ import { Editor } from '@toast-ui/react-editor';
 
 export default function ToastEditor(props) {
   const { content, editorRef } = props;
-  console.log('here');
   return (
     <Editor
       // placeholder="내용을 입력해주세요."
@@ -17,7 +16,6 @@ export default function ToastEditor(props) {
         ['heading', 'bold', 'italic', 'strike'],
         ['hr', 'quote'],
         ['ul', 'ol', 'task', 'indent', 'outdent'],
-        // ['table', 'image', 'link'], 이미지 업로드 기능이 없어서 주석처리
         ['image'],
         ['code', 'codeblock'],
       ]}

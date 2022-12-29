@@ -15,9 +15,7 @@ export default function CreatePost({ type = 'edit' }) {
   const editorRef = useRef();
   const navigate = useNavigate();
 
-  const onSubmit = async () => {
-    // 에디터 입력창에 입력한 내용을 HTML 태그 형태로 취득
-    // const content = editorRef.current?.getInstance().getHTML();
+  const onSubmitHandler = async () => {
     // 마크다운 형식
     if (title == '') return;
     const content = editorRef.current?.getInstance().getMarkdown();
@@ -26,7 +24,6 @@ export default function CreatePost({ type = 'edit' }) {
       content,
     };
     const res = await createPostApi(postData);
-    console.log(res);
     navigate('/');
   };
   const onExitHandler = () => {
@@ -53,7 +50,7 @@ export default function CreatePost({ type = 'edit' }) {
           </StArrowWrap>
         </STBackButton>
 
-        <STSubmitButton onClick={onSubmit}>제출하기</STSubmitButton>
+        <STSubmitButton onClick={onSubmitHandler}>제출하기</STSubmitButton>
       </STButtonsWrap>
     </StMyPageContainer>
   );
@@ -122,7 +119,6 @@ const STSubmitButton = styled.button`
 `;
 
 const StMyPageContainer = styled.div`
-  /* background-color: lightblue; */
   margin: 0 auto;
   @media (min-width: 768px) {
     width: 768px;

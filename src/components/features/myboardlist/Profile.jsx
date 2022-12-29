@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 
 export default function Profile() {
-  // const userInfo = useSelector(state => state.userInfo);
   const [userInfo, setUserInfo] = useState();
 
   const getLocalUserInfo = useCallback(() => {

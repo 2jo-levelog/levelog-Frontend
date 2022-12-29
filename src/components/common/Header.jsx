@@ -15,7 +15,6 @@ function Header() {
   const [userInfo, setUserInfo] = useState();
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
   const navigation = useNavigate();
-
   const getLocalUserInfo = useCallback(() => {
     const userInfoData = {
       email: localStorage.getItem('email'),
