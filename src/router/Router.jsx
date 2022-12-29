@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from '../components/common/Header';
-
 import Main from '../page/main/Main';
 import Mypage from '../page/mypage/Mypage';
 import EditPost from '../page/detail/EditPost';

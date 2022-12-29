@@ -265,7 +265,6 @@ const StProfile = styled.div`
   align-items: center;
   overflow: hidden;
   margin: 3rem 0 5rem;
-
   .profile_image {
     border: 1px solid #989898;
     width: 160px;

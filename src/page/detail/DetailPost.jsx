@@ -10,19 +10,20 @@ import { ko } from 'date-fns/locale';
 import { RiHeartAddFill } from 'react-icons/ri';
 import { authInstance, instance } from '../../apis/axios';
 import MainReple from '../../components/features/reple/MainReple';
-import { setCommentInfo } from '../../redux/modules/commentSlice';
 
 export default function DetailPost() {
   const { postId } = useParams();
-  const dispatch = useDispatch();
+  const [isTrue, setIsTrue] = useState(true);
   const [postData, setPostData] = useState('');
+  const globalNick = useSelector(state => state.userInfo.nickName);
 
   useEffect(() => {
-    authInstance.post(`/api/posts/${postId}`).then(response => {
+    authInstance.get(`/api/posts/${postId}`).then(response => {
       setPostData(response);
     });
-    setCommentInfo();
-  }, [dispatch, postId]);
+  }, [isTrue, postId]);
+  const BoardUserNick = postData.data?.nickname;
+
   const d = new Date(postData.data?.createdAt);
   const now = Date.now();
   const diff = (now - d.getTime()) / 1000;
@@ -44,13 +45,24 @@ export default function DetailPost() {
     authInstance
       .post(`/api/posts/${postId}/comments/`, payload)
       .then(res => {
-        authInstance.post(`/api/posts/${postId}`).then(response => {
+        authInstance.get(`/api/posts/${postId}`).then(response => {
           setPostData(response);
           commentValue.current.value = '';
         });
       })
       .catch(error => console.log(error));
   };
+  const key = localStorage.getItem('nickName');
+
+  const onDeleteHandler = () => {
+    authInstance
+      .delete(`/api/posts/${postId}`)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => console.log(error));
+  };
+  console.log('same?', globalNick == BoardUserNick, globalNick, BoardUserNick);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   /*
   해야할 일 
@@ -65,10 +77,19 @@ export default function DetailPost() {
         <div>
           <div className="main_header">
             <h1>{postData.data.title}</h1>
-            <StUtilContainer>
-              <button type="button">수정</button>
-              <button type="button">삭제</button>
-            </StUtilContainer>
+            {key == BoardUserNick ? (
+              <StUtilContainer>
+                <StModifyBtn to={`/editpost/${postId}`} type="button">
+                  수정
+                </StModifyBtn>
+                <StDeleteBtn type="button" onClick={onDeleteHandler}>
+                  삭제
+                </StDeleteBtn>
+              </StUtilContainer>
+            ) : (
+              ''
+            )}
+
             <StBoardInfo>
               <div className="main_userinfo">
                 <p className="board_nickname">{postData.data.nickname}</p>·
@@ -92,8 +113,9 @@ export default function DetailPost() {
               </StLikesContainer>
             </StLikesWrapper>
           </div>
-
-          <Viewer initialValue={postData.data.content} />
+          <StViewerContainer>
+            <Viewer initialValue={postData.data.content} />
+          </StViewerContainer>
           <StCommentWrapper>
             <div className="comment_input_field">
               <h4>{postData.data.cmtCnt}개의 댓글</h4>
@@ -116,7 +138,13 @@ export default function DetailPost() {
                 {postData &&
                   postData.data.commentList.map(data => {
                     /* console.log(data); */
-                    return <MainReple key={data.id} data={data} />;
+                    return (
+                      <MainReple
+                        key={data.id}
+                        data={data}
+                        setIsTrue={setIsTrue}
+                      />
+                    );
                   })}
               </div>
             </div>
@@ -157,7 +185,6 @@ const StBoardInfo = styled.div`
   align-items: center;
   justify-content: space-between;
   position: relative;
-
   .main_header {
     padding: 0 10px;
     box-sizing: border-box;
@@ -187,7 +214,6 @@ const StLikesWrapper = styled.div`
 `;
 const StLikesContainer = styled.div`
   position: fixed;
-
   top: 18rem;
   background: #f8f9fa;
   border: 1px solid #f1f3f5;
@@ -248,7 +274,6 @@ const StLikeLabelTab = styled.button`
   @media (max-width: 1024px) {
     display: flex;
   }
-
   &.active {
     border-color: #20c997;
     background: #20c997;
@@ -278,7 +303,6 @@ const StUtilContainer = styled.div`
     border: none;
     background: none;
     font-size: 1rem;
-
     &:hover {
       color: black;
     }
@@ -336,4 +360,23 @@ const StCommentBtnBox = styled.div`
     height: 2rem;
     font-size: 1rem;
   }
+`;
+const StModifyBtn = styled(Link)`
+  text-decoration: none;
+  color: #868e96;
+  font-size: 0.875rem;
+  &:hover {
+    color: black;
+  }
+`;
+const StDeleteBtn = styled(Link)`
+  text-decoration: none;
+  font-size: 0.875rem;
+  color: #868e96;
+  &:hover {
+    color: black;
+  }
+`;
+const StViewerContainer = styled.div`
+  margin: 4rem 0;
 `;
