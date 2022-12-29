@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 // Toast-UI Viewer 임포트
 import '@toast-ui/editor/dist/toastui-editor-viewer.css';
@@ -7,23 +8,26 @@ import { Viewer } from '@toast-ui/react-editor';
 import { format, formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { RiHeartAddFill } from 'react-icons/ri';
-import { authInstance } from '../../apis/axios';
+import { authInstance, instance } from '../../apis/axios';
+import MainReple from '../../components/features/reple/MainReple';
+import { setCommentInfo } from '../../redux/modules/commentSlice';
 
 export default function DetailPost() {
   const { postId } = useParams();
-
+  const dispatch = useDispatch();
   const [postData, setPostData] = useState('');
 
   useEffect(() => {
     authInstance.post(`/api/posts/${postId}`).then(response => {
       setPostData(response);
     });
-  }, [postId]);
-
+    setCommentInfo();
+  }, [dispatch, postId]);
   const d = new Date(postData.data?.createdAt);
   const now = Date.now();
   const diff = (now - d.getTime()) / 1000;
 
+  const commentValue = useRef();
   function formatDate() {
     if (diff < 60 * 1) {
       // 1분 미만일땐 방금 전 표기
@@ -35,20 +39,30 @@ export default function DetailPost() {
     }
     return format(d, 'PPP EEE p', { locale: ko }); // 날짜 포맷
   }
-
+  const onSubmitCommentHandler = () => {
+    const payload = { comment: commentValue.current.value };
+    authInstance
+      .post(`/api/posts/${postId}/comments/`, payload)
+      .then(res => {
+        authInstance.post(`/api/posts/${postId}`).then(response => {
+          setPostData(response);
+          commentValue.current.value = '';
+        });
+      })
+      .catch(error => console.log(error));
+  };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   /*
   해야할 일 
   1. 좋아요 버튼 기능 - 틀 완료, 기능 x
   2. 유저 아이디 비교해서 수정, 삭제 버튼 띄우기 기능
-  3. 댓글 기능
+  3. 댓글 기능, 대댓글
  */
   return (
     <StDetailWrapper>
       {/* postData의 초기값은 null null상태에서 Viewer를 불러오면 에러 발생해서 postData가 겟되어진 뒤에 ToastUI를 불러옴 */}
       {postData && (
         <div>
-          {/* TODO: 디자인 */}
           <div className="main_header">
             <h1>{postData.data.title}</h1>
             <StUtilContainer>
@@ -64,7 +78,7 @@ export default function DetailPost() {
               </div>
               <StLikeLabelTab>
                 <StLikeBtnTab />
-                <span>0</span>
+                <span>{postData.data?.likeCnt}</span>
               </StLikeLabelTab>
             </StBoardInfo>
             <StLikesWrapper>
@@ -80,21 +94,36 @@ export default function DetailPost() {
           </div>
 
           <Viewer initialValue={postData.data.content} />
-
-          {/* TODO: 수정 삭제 기능 추가 */}
+          <StCommentWrapper>
+            <div className="comment_input_field">
+              <h4>{postData.data.cmtCnt}개의 댓글</h4>
+              <textarea
+                name=""
+                id=""
+                cols="30"
+                rows="10"
+                placeholder="댓글을 입력하세요."
+                ref={commentValue}
+              />
+              <StCommentBtnBox>
+                <button type="button" onClick={onSubmitCommentHandler}>
+                  댓글 작성
+                </button>
+              </StCommentBtnBox>
+            </div>
+            <div className="comment_reple_field">
+              <div>
+                {postData &&
+                  postData.data.commentList.map(data => {
+                    /* console.log(data); */
+                    return <MainReple key={data.id} data={data} />;
+                  })}
+              </div>
+            </div>
+          </StCommentWrapper>
         </div>
       )}
-      {/* <StBoardUserInfo>
-            <div>
-              <StUserImg to={`/api/users/${userId}/posts/`}>
-                <img
-                  src="https://velog.velcdn.com/images/strause1/profile/47ebd413-44e3-427e-b4d3-788f30b7631c/social_profile.png"
-                  alt=""
-                />
-              </StUserImg>
-              <span>순딩</span>
-            </div>
-          </StBoardUserInfo> */}
+
       <div />
     </StDetailWrapper>
   );
@@ -118,6 +147,8 @@ const StDetailWrapper = styled.div`
       font-size: 3rem;
       margin-top: 0;
       margin-bottom: 2rem;
+      margin-bottom: 2rem;
+      word-break: keep-all;
     }
   }
 `;
@@ -260,4 +291,49 @@ const StBoardUserInfo = styled.div`
 const StUserImg = styled(Link)`
   border-radius: 50%;
   overflow: hidden;
+`;
+const StCommentWrapper = styled.div`
+  .comment_input_field {
+    display: flex;
+    flex-direction: column;
+  }
+  h4 {
+    font-size: 1.1rem;
+  }
+  textarea {
+    resize: none;
+    height: 70px;
+    padding: 1rem 1rem 1.5rem;
+    outline: none;
+    border: 1px solid #f1f3f5;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+    min-height: 6.125rem;
+    font-size: 1rem;
+    color: #212529;
+    line-height: 1.75;
+    background: #ffffff;
+    &::placeholder {
+      color: #bcbdbe;
+    }
+  }
+  .comment_reple_field {
+    margin-top: 2.5rem;
+  }
+`;
+const StCommentBtnBox = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  button {
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background: #12b886;
+    color: #fff;
+    border-radius: 4px;
+    padding: 0px 1.25rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
 `;
