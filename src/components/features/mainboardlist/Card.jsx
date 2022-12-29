@@ -4,6 +4,8 @@ import { HiHeart } from 'react-icons/hi';
 import styled from 'styled-components';
 import { format, formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import '@toast-ui/editor/dist/toastui-editor-viewer.css';
+import { Viewer } from '@toast-ui/react-editor';
 
 export default function Card(data) {
   // eslint-disable-next-line react/destructuring-assignment
@@ -42,7 +44,9 @@ export default function Card(data) {
         <StBoardInfo>
           <div className="board_content">
             <h4>{title}</h4>
-            <StMainContent>{content}</StMainContent>
+            <StMainContent>
+              <Viewer initialValue={content} />
+            </StMainContent>
           </div>
           <div className="board_util">
             <StUploadTime>{formatDate(diff)}</StUploadTime>·
@@ -137,7 +141,7 @@ const StUserProfile = styled.div`
     line-height: 0.7;
   }
 `;
-const StMainContent = styled.span`
+const StMainContent = styled.div`
   color: #495057;
   font-size: 0.88rem;
   height: 4rem;

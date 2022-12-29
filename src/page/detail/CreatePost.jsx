@@ -19,6 +19,7 @@ export default function CreatePost({ type = 'edit' }) {
     // 에디터 입력창에 입력한 내용을 HTML 태그 형태로 취득
     // const content = editorRef.current?.getInstance().getHTML();
     // 마크다운 형식
+    if (title == '') return;
     const content = editorRef.current?.getInstance().getMarkdown();
     const postData = {
       title,
