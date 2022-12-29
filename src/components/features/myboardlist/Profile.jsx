@@ -1,16 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
 
 export default function Profile() {
-  const userInfo = useSelector(state => state.userInfo);
+  // const userInfo = useSelector(state => state.userInfo);
+  const [userInfo, setUserInfo] = useState();
+
+  const getLocalUserInfo = useCallback(() => {
+    const userInfoData = {
+      email: localStorage.getItem('email'),
+      nickName: localStorage.getItem('nickName'),
+      profileImg: localStorage.getItem('profileImg'),
+    };
+    setUserInfo(userInfoData);
+  }, []);
+
+  useEffect(() => {
+    getLocalUserInfo();
+  }, [getLocalUserInfo]);
 
   return (
     <div>
-      <StProfileContainer>
-        <StImg src={userInfo.profileImg} />
-        <StUserId>{userInfo.nickName}</StUserId>
-      </StProfileContainer>
+      {userInfo && (
+        <StProfileContainer>
+          <StImg src={userInfo.profileImg} />
+          <StUserId>{userInfo.nickName}</StUserId>
+        </StProfileContainer>
+      )}
       <Divider />
     </div>
   );

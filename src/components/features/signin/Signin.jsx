@@ -1,37 +1,38 @@
 import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
 
-import { setUserInfo } from '../../../redux/modules/userInfo';
 import { postLogin } from '../../../apis/auth';
 import { getUserInfo } from '../../../apis/user';
 
 export default function Signin({ closeEventHandler }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const dispatch = useDispatch();
 
   const getUser = useCallback(async () => {
     const { data } = await getUserInfo();
-    console.log(data);
-    dispatch(setUserInfo(data));
-  }, [dispatch]);
+    localStorage.setItem('email', data.email);
+    localStorage.setItem('nickName', data.nickName);
+    localStorage.setItem('profileImg', data.profileImg);
+  }, []);
 
   const onSignInHandler = async () => {
+    // 로그인 정보를 초기화
+    localStorage.clear();
     try {
       const res = await postLogin({
         email,
         password,
       });
-
       localStorage.setItem('id', res.headers.authorization);
       // userInfo redux 저장
-      await getUser();
+      const data = await getUser();
+      console.log(data);
       alert('로그인 완료');
+      closeEventHandler();
+      window.location.reload();
     } catch (error) {
-      console.log(error);
+      alert('로그인 실패');
     }
-    closeEventHandler();
   };
 
   return (
