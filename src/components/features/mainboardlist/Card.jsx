@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { HiHeart } from 'react-icons/hi';
 import styled from 'styled-components';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -6,8 +7,8 @@ import { ko } from 'date-fns/locale';
 
 export default function Card(data) {
   // eslint-disable-next-line react/destructuring-assignment
-  const { id, title, content, nickname, likes, createdAt } = data;
-
+  const { id, title, content, nickname, likes, cmtCnt, createdAt } = data;
+  const navigate = useNavigate();
   const d = new Date(createdAt);
   const now = Date.now();
   const diff = (now - d.getTime()) / 1000;
@@ -15,6 +16,7 @@ export default function Card(data) {
   useEffect(() => {
     formatDate();
   }, []);
+
   function formatDate() {
     if (diff < 60 * 1) {
       // 1분 미만일땐 방금 전 표기
@@ -28,7 +30,7 @@ export default function Card(data) {
   }
 
   return (
-    <StWrapper>
+    <StWrapper onClick={() => navigate(`/detailpost/${id}`)}>
       <div>
         <img
           className="boardlist_img"
@@ -43,9 +45,9 @@ export default function Card(data) {
             <StMainContent>{content}</StMainContent>
           </div>
           <div className="board_util">
-            <StUploadTime>{formatDate(createdAt)}</StUploadTime>·
+            <StUploadTime>{formatDate(diff)}</StUploadTime>·
             <StReplyCount>
-              <span>{likes}</span>개의 댓글
+              <span>{cmtCnt}</span>개의 댓글
             </StReplyCount>
           </div>
         </StBoardInfo>
@@ -65,7 +67,7 @@ export default function Card(data) {
           </div>
           <StUserProfileLikes>
             <StLikes />
-            <span className="profile_likes">0</span>
+            <span className="profile_likes">{likes}</span>
           </StUserProfileLikes>
         </StUserProfile>
       </StBoardContent>

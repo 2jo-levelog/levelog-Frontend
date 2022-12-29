@@ -1,11 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { authInstance, instance } from '../../../apis/axios';
 import Card from './Card';
 
 export default function MainBoardList() {
   const [boardList, setBoardList] = useState([]);
+  /*  const userInfo = useSelector(state => state.userInfo); */
 
   useEffect(() => {
     instance.get('/api/main').then(response => {
@@ -18,6 +20,7 @@ export default function MainBoardList() {
       <StMainInner>
         {boardList &&
           boardList?.map(data => {
+            console.log(data);
             return (
               <Card
                 key={data.id}
@@ -26,6 +29,7 @@ export default function MainBoardList() {
                 content={data.content}
                 nickname={data.nickname}
                 likes={data.likeCnt}
+                reply={data.cmtCnt}
                 createdAt={data.createdAt}
               />
             );

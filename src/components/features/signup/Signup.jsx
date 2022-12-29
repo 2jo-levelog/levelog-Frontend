@@ -16,7 +16,7 @@ import {
 import { authInstance, instance } from '../../../apis/axios';
 /* eslint-disable react/jsx-props-no-spreading */
 
-export default function Signup({ setChange }) {
+export default function Signup({ closeEventHandler }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [imgSrc, setImgSrc] = useState({
@@ -104,6 +104,7 @@ export default function Signup({ setChange }) {
       upload: e.target.files[0],
       preview: URL.createObjectURL(e.target.files[0]),
     });
+    console.log();
   };
 
   const emailValue = getValues('email');
@@ -118,15 +119,16 @@ export default function Signup({ setChange }) {
     const blob = new Blob([JSON.stringify(file)], {
       type: 'application/json',
     });
+
     formData.append('key', blob);
-    formData.append('multipartFile', imgSrc.upload);
+    imgSrc.upload && formData.append('multipartFile', imgSrc.upload);
 
     signupCheck(formData)
       .then(response => {
         console.log(response);
         if (response.status == 200) {
           alert('회원가입이 완료되었습니다.');
-          setChange(true);
+          return closeEventHandler();
         }
       })
       .catch(error => {
@@ -263,7 +265,6 @@ const StProfile = styled.div`
   align-items: center;
   overflow: hidden;
   margin: 3rem 0 5rem;
-
   .profile_image {
     border: 1px solid #989898;
     width: 160px;

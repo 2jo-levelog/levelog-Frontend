@@ -2,23 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 import MyBoardList from '../../components/features/myboardlist/MyBoardList';
 import Profile from '../../components/features/myboardlist/Profile';
-import Header from '../../components/common/Header';
-import TestApi from '../../components/common/TestApi';
 
 export default function Mypage() {
   return (
-    <div>
-      {/* <Header /> */}
-      <StMyPageContainer>
-        <ProfileWrapper>
-          <Profile />
-          <TestApi />
-        </ProfileWrapper>
-        <StMyPageWrapper>
-          <MyBoardList />
-        </StMyPageWrapper>
-      </StMyPageContainer>
-    </div>
+    <StMyPageContainer>
+      <ProfileWrapper>
+        <Profile />
+      </ProfileWrapper>
+      <StMyPageWrapper>
+        <MyBoardList />
+      </StMyPageWrapper>
+    </StMyPageContainer>
   );
 }
 const StMyPageContainer = styled.div`

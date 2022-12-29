@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { IoIosClose } from 'react-icons/io';
 import Modal from './Modal';
 import useModal from '../../hooks/useSignModal';
@@ -11,7 +11,37 @@ import Signup from '../features/signup/Signup';
 function Header() {
   const [modal, onChangeModalHandler] = useModal();
   const [change, setChange] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
+  const [userInfo, setUserInfo] = useState();
+  const [isOpenDropDown, setIsOpenDropDown] = useState(false);
+  const navigation = useNavigate();
 
+  const getLocalUserInfo = useCallback(() => {
+    const userInfoData = {
+      email: localStorage.getItem('email'),
+      nickName: localStorage.getItem('nickName'),
+      profileImg: localStorage.getItem('profileImg'),
+    };
+    setUserInfo(userInfoData);
+  }, []);
+
+  useEffect(() => {
+    getLocalUserInfo();
+  }, [getLocalUserInfo]);
+
+  const onOpenDropDownHandler = () => {
+    setIsOpenDropDown(!isOpenDropDown);
+  };
+  const profileImg = localStorage.getItem('profileImg');
+
+  useEffect(() => {
+    const data = localStorage.getItem('id');
+
+    // 값이 있을때 true로 변경 - 로그인 상태
+    setIsLogin(!!data);
+  }, []);
+
+  const navigate = useNavigate();
   // 모달창 x 버튼 눌렀을 때
   const closeEventHandler = () => {
     setChange(true);
@@ -22,9 +52,15 @@ function Header() {
     onChangeModalHandler();
     document.body.style.overflowY = 'hidden';
   };
-  const onSubmitHandler = () => {
-    console.log('submit');
+  const onSignOutHandler = () => {
+    // 로컬 스토리지 데이터 클리어
+    localStorage.clear();
+    setIsOpenDropDown(false);
+    window.location.reload();
+    alert('로그아웃 되었습니다.');
+    navigate('/');
   };
+
   const onClickLoginHandler = () => {
     onChangeModalHandler();
   };
@@ -47,11 +83,38 @@ function Header() {
         </svg>
       </a>
 
-      <div>
-        <StLoginBtn type="button" onClick={onSignHandler}>
-          로그인
-        </StLoginBtn>
-      </div>
+      <StHeaderProfileWrap>
+        {isLogin ? (
+          <StHeaderImg src={profileImg} onClick={onOpenDropDownHandler} />
+        ) : (
+          <StLoginBtn type="button" onClick={onSignHandler}>
+            로그인
+          </StLoginBtn>
+        )}
+        {isOpenDropDown && (
+          <StDropDown>
+            <StMenuUl>
+              <StMenu
+                onClick={() => {
+                  setIsOpenDropDown(false);
+                  navigation('/mypage');
+                }}
+              >
+                내 벨로그
+              </StMenu>
+              <StMenu
+                onClick={() => {
+                  setIsOpenDropDown(false);
+                  navigation('/createpost');
+                }}
+              >
+                새글 작성
+              </StMenu>
+              <StMenu onClick={onSignOutHandler}>로그아웃</StMenu>
+            </StMenuUl>
+          </StDropDown>
+        )}
+      </StHeaderProfileWrap>
 
       <Modal
         width="700px"
@@ -77,6 +140,7 @@ function Header() {
               <StClose />
             </div>
             <StTitle>{change ? '로그인' : '회원가입'}</StTitle>
+
             <StContent>
               {change ? (
                 <Signin closeEventHandler={closeEventHandler} />
@@ -100,7 +164,48 @@ function Header() {
   );
 }
 export default Header;
+const StHeaderProfileWrap = styled.div`
+  position: relative;
+`;
 
+const StDropDown = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid grey;
+  top: 50px;
+  right: 0px;
+  width: 10rem;
+  z-index: 100;
+  border-radius: 4px;
+  background-color: #fff;
+`;
+const StMenuUl = styled.ul`
+  padding: 0;
+  margin: 0;
+`;
+const StMenu = styled.li`
+  list-style: none;
+  background-color: '#fffff';
+  margin: 0px;
+  padding: 12px 16px;
+  max-width: 250px;
+  width: 100%;
+  cursor: pointer;
+  &:hover {
+    font-weight: bolder;
+    color: #12b886;
+  }
+`;
+
+const StHeaderImg = styled.img`
+  display: block;
+  height: 3rem;
+  width: 3rem;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+`;
 const StHeader = styled.div`
   display: flex;
   height: 4rem;
