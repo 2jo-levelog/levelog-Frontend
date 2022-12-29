@@ -15,8 +15,6 @@ function Header() {
   const [userInfo, setUserInfo] = useState();
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
   const navigation = useNavigate();
-
-  console.log(userInfo);
   const getLocalUserInfo = useCallback(() => {
     const userInfoData = {
       email: localStorage.getItem('email'),
@@ -37,7 +35,6 @@ function Header() {
 
   useEffect(() => {
     const data = localStorage.getItem('id');
-    console.log(data);
     // 값이 있을때 true로 변경 - 로그인 상태
     setIsLogin(!!data);
   }, []);

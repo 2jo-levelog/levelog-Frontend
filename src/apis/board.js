@@ -1,6 +1,5 @@
 import { authInstance, instance } from './axios';
 
-/* MyBoardList 불러오기 */
 export const getPosts = async userId => {
   try {
     const data = await instance.get(`/api/users/${userId}/posts/`);
@@ -21,11 +20,7 @@ export const getPost = async postId => {
 
 export const createPostApi = async postData => {
   try {
-    const data = await authInstance.post('/api/posts/write', postData, {
-      // headers: {
-      //   'Content-Type': 'multipart/form-data',
-      // },
-    });
+    const data = await authInstance.post('/api/posts/write', postData);
     return data;
   } catch (error) {
     return error;

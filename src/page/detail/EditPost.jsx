@@ -8,8 +8,6 @@ import ToastEditor from './ToastEditor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { getPost, createPostApi } from '../../apis/board';
 
-// npm i -S @toast-ui/editor
-
 export default function EditPost() {
   const [title, setTitle] = useState('');
   const [contentData, setcontentData] = useState();
@@ -41,8 +39,6 @@ export default function EditPost() {
   }, [contentData, handleEdit]);
 
   const onEditSubmitHandler = async () => {
-    // 에디터 입력창에 입력한 내용을 HTML 태그 형태로 취득
-    // const content = editorRef.current?.getInstance().getHTML();
     // 마크다운 형식
     const content = editorRef.current?.getInstance().getMarkdown();
     const postData = {
@@ -50,7 +46,6 @@ export default function EditPost() {
       content,
     };
     const { data } = await createPostApi(postData);
-    console.log(data.id);
     navigate(`/detailpost/${data.id}`);
   };
   const onChangeTitleHandler = e => {
@@ -92,7 +87,6 @@ const StTextarea = styled.textarea`
   color: #212529;
 `;
 const StContainer = styled.div`
-  /* background-color: lightblue; */
   margin: 0 auto;
   @media (min-width: 768px) {
     width: 768px;

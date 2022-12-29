@@ -16,17 +16,14 @@ export default function Mypage() {
   );
 }
 const StMyPageContainer = styled.div`
-  /* background-color: lightblue; */
   margin: 0 auto;
   @media (min-width: 768px) {
     width: 768px;
   }
 `;
 const ProfileWrapper = styled.div`
-  /* background-color: lightcyan; */
   width: 100%;
 `;
-
 const StMyPageWrapper = styled.div`
   width: 100%;
 `;
