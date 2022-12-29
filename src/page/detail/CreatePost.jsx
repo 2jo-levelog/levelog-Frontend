@@ -17,6 +17,7 @@ export default function CreatePost({ type = 'edit' }) {
 
   const onSubmitHandler = async () => {
     // 마크다운 형식
+    if (title == '') return;
     const content = editorRef.current?.getInstance().getMarkdown();
     const postData = {
       title,
