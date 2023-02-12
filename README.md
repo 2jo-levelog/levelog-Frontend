@@ -1,34 +1,39 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=auto&height=150&section=header&text=Levelog&fontSize=90" />
-​
+
 -----
 ## 1. 프로젝트 소개
 - 개발자들을 위한 블로그인 velog를 클론 코딩하여 코딩 능력을 향상 시키는 레벨 업 프로젝트입니다. <br><br>
-​
+<br>
+
 ----
-​
-## 2. 기능 명세서
-​
+## 2. 시연 영상
+![레벨로그](https://user-images.githubusercontent.com/111271565/218298213-ff34badd-a5e4-4333-9aab-bf5399d3481f.gif)
+<br><br>
+
+----
+## 3. 기능 명세서
+
 #### 1. 로그인 / 회원가입
-​
+
 - 로그인 및 회원가입 (JWT Token 사용)
 - 로그아웃
 - 프로필 이미지 추가
-​
+
 #### 2. 게시글
-​
+
 - 텍스트 작성
 - 이미지 첨부
 - 좋아요
 - 태그
-​
+
 #### 3. 댓글
-​
+
 - 댓글
 - 좋아요
 - 대댓글
-​
+
 #### 4. 추가기능
-​
+
 - 검색
 - 게시글 정렬 (최신순, 조회순)
 - 시간별 카테고리
@@ -38,12 +43,12 @@
 - 회원가입 시 메일 인증
 - Refresh token, Access Token
   <br><br>
-​
+
 ----
-​
-## 3. 기술 스택
+
+## 4. 기술 스택
 <div align=center> 
-​
+
 ## * Frontend Tech Stack
 <br>
   <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> 
@@ -60,8 +65,8 @@
     <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
     <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
   <br>
-​
-​
+
+
 ## * Backend Tech Stack
 <br>
     <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
@@ -84,18 +89,18 @@
     <br>
     </div>
 <br>
-​
+
 ------
-​
-## 4. 서비스 아키텍쳐
-​
+
+## 5. 서비스 아키텍쳐
+
 ![levelog_서비스-아키텍쳐 (2)](https://user-images.githubusercontent.com/111271565/209953282-c972624b-fd96-400d-b54e-6a1d89a7a9f8.jpg)
-​
+
 -----
-​
-## 5. 트러블 슈팅
-​
-​
+
+## 6. 트러블 슈팅
+
+
 ✅  **CORS 관련한 트러블 슈팅** <br><br>
 커스텀한 Token 을 불러오는 과정에서 문제 였다.
 addExposedHeader("커스텀한 헤드명") 이 부분에다가 우리가 추가한 헤더 부분을 가져오지 못하는 것에서 생긴 403 에러 였다.
@@ -120,22 +125,22 @@ True / False로 반환 -> 토큰값이 없을 경우 비회원이기 때문에 �
 클라이언트를 통해 글 작성, 댓글 작성 시 시간이 9시간 전의 시간으로 작성되는 문제였는데 EC2 서버의 시간이 세계협정시 (UTC)로
 적용되어있는 것이 원인으로 EC2 서버에서 dpkg-reconfigure 명령어를 사용해 EC2 서버의 시간을 KST로 변경하여 해결하였다.
 <br><br>
-​
+
 -----
-​
-## 6. 관련 링크
-​
+
+## 7. 관련 링크
+
 📌 프론트엔드 깃허브 : https://github.com/2jo-levelog/levelog-Frontend <br>
 📌 백엔드 깃허브 : https://github.com/2jo-levelog/levelog-Backend
-​
+
 📌 팀 노션 : https://www.notion.so/10-2-levelog-3c77ed1eb7234fe3be33faeb67e93bf9
-​
+
 🔗 [API명세서 (Postman)](https://documenter.getpostman.com/view/24654654/2s8Z6yWCgh)</br></br>
-​
+
 ----
-​
-## 7. 팀원 정보
-​
+
+## 8. 팀원 정보
+
 | 이름  | 깃 허브 주소                          |
 |-----|----------------------------------|
 | 강민승 | https://github.com/minseung-gang |
