@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counter from './modules/counter';
+import userInfo from './modules/userInfo';
 
 const store = configureStore({
-  reducer: { counter },
+  reducer: { userInfo },
 });
 
 export default store;
